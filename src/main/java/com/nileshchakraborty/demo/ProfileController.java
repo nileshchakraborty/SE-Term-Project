@@ -27,31 +27,29 @@ public class ProfileController {
 		return indexPage;
 	}
 
-	@PostMapping(value="/upload")
-	public ModelAndView uploadToS3(@RequestParam("file") MultipartFile image) {		
+	@PostMapping(value = "/upload")
+	public ModelAndView uploadToS3(@RequestParam("file") MultipartFile image) {
 		ModelAndView profilePage = new ModelAndView();
-		BasicAWSCredentials cred = new BasicAWSCredentials("AKIAIS5XKUSYHRR4VJBA","E8GOZZIMSzH1cdoG+tUv/jAmh9YnGh4yw111FLgD");
-		AmazonS3 s3client = AmazonS3ClientBuilder
-				.standard()
-				.withCredentials(new AWSStaticCredentialsProvider(cred))
-				.withRegion(Regions.US_EAST_1)
-				.build();
-		
+		BasicAWSCredentials credentials = new BasicAWSCredentials("AKIAIS5XKUSYHRR4VJBA",
+				"E8GOZZIMSzH1cdoG+tUv/jAmh9YnGh4yw111FLgD");
+		AmazonS3 s3client = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials))
+				.withRegion(Regions.US_EAST_1).build();
+
 		try {
-			PutObjectRequest putReq = new PutObjectRequest("demotest-nilesh",image.getOriginalFilename(),image.getInputStream(),new ObjectMetadata()).withCannedAcl(CannedAccessControlList.PublicRead);
+			PutObjectRequest putReq = new PutObjectRequest("demotest-nilesh", image.getOriginalFilename(),
+					image.getInputStream(), new ObjectMetadata()).withCannedAcl(CannedAccessControlList.PublicRead);
 			s3client.putObject(putReq);
-			String s3Origin = "http://"+ "demotest-nilesh"  + ".s3.amazonaws.com/"+image.getOriginalFilename();
+			String s3Origin = "http://" + "demotest-nilesh" + ".s3.amazonaws.com/" + image.getOriginalFilename();
 			profilePage.addObject("image", s3Origin);
 			profilePage.setViewName("profilePage");
 			return profilePage;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			profilePage.addObject("errormsg",e.getMessage());
-			profilePage.setViewName("error");
+			profilePage.addObject("errormsg", e.getMessage());
+			profilePage.setViewName("errorPage");
 			return profilePage;
 		}
 	}
-		
-		
+
 }
