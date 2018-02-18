@@ -13,7 +13,15 @@
 
 </head>
 <body>
-	<h1>Hello World</h1>
+	<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="#"><img alt="BrandLogo"
+				src="../images/logo.jpg"> </a>
+		</div>
+	</div>
+	</nav>
+
 
 	<script
 		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
