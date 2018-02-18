@@ -1,4 +1,4 @@
-img {
-	height: '50dp';
-	width: '50dp';
+.imageSize {
+	height: 30px;
+	width: 50px;
 }

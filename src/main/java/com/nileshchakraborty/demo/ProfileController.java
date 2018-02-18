@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -20,6 +23,9 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 
 @Controller
 public class ProfileController {
+	private static BasicAWSCredentials credentials = new BasicAWSCredentials("AKIAIS5XKUSYHRR4VJBA",
+			"E8GOZZIMSzH1cdoG+tUv/jAmh9YnGh4yw111FLgD");
+
 	@GetMapping(value = "/")
 	public ModelAndView renderPage() {
 		ModelAndView indexPage = new ModelAndView();
@@ -28,12 +34,11 @@ public class ProfileController {
 	}
 
 	@PostMapping(value = "/upload")
-	public ModelAndView uploadToS3(@RequestParam("file") MultipartFile image) {
+	public ModelAndView uploadToS3(@RequestParam("file") MultipartFile image) throws IOException {
 		ModelAndView profilePage = new ModelAndView();
-		BasicAWSCredentials credentials = new BasicAWSCredentials("AKIAIS5XKUSYHRR4VJBA",
-				"E8GOZZIMSzH1cdoG+tUv/jAmh9YnGh4yw111FLgD");
-		AmazonS3 s3client = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials))
-				.withRegion(Regions.US_EAST_1).build();
+
+		AmazonS3 s3client = AmazonS3ClientBuilder.standard()
+				.withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(Regions.US_EAST_1).build();
 
 		try {
 			PutObjectRequest putReq = new PutObjectRequest("demotest-nilesh", image.getOriginalFilename(),
@@ -47,9 +52,16 @@ public class ProfileController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			profilePage.addObject("errormsg", e.getMessage());
-			profilePage.setViewName("errorPage");
+			profilePage.setViewName("error");
 			return profilePage;
 		}
 	}
-
+	
+	@GetMapping(value = "/error")
+	public ModelAndView errorHandling() {
+		ModelAndView errorPage = new ModelAndView();
+		errorPage.addObject("errormsg", "Error Occured!");
+		errorPage.setViewName("error");
+		return errorPage;
+	}
 }
