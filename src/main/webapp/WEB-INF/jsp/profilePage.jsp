@@ -22,7 +22,7 @@
 		</div>
 		</div>
 	</nav>
-	<img src="${img}" alt="Profile Page Image" />
+	<img src="${image}" alt="Profile Page Image" />
 
 
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
