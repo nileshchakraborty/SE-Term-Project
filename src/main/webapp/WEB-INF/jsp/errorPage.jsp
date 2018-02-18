@@ -20,7 +20,7 @@
 		</div>
 		</div>
 	</nav>
-	<h3>issue loading page</h3>
+	<h3>Issue loading page</h3>
 	<p>${errormsg}</p>
 
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
