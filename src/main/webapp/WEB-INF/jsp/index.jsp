@@ -16,18 +16,17 @@
 </head>
 <body>
 	<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      
-      <a class="navbar-brand" href="#">
-        <img class="imageSize" alt="Brand" src="images/logo.ico" >
-              Profile Creator
-      </a>
-      
+	<div class="container-fluid">
+		<div class="navbar-header">
 
-    </div>
-  </div>
-</nav>
+			<a class="navbar-brand" href="#"> <img class="imageSize"
+				alt="Brand" src="images/logo.ico"> Profile Creator
+			</a>
+
+
+		</div>
+	</div>
+	</nav>
 
 
 	<form action="/upload" method="POST" enctype="multipart/form-data">

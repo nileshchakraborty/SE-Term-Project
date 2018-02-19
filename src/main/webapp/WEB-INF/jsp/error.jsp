@@ -9,21 +9,23 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	crossorigin="anonymous">
+<link href="image/logo.ico" rel="icon">
+<link rel="stylesheet" type="text/css" href="css/custom.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 	<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      
-      <a class="navbar-brand" href="#">
-        <img class="imageSize" alt="Brand" src="images/logo.ico" >
-              Profile Creator
-      </a>
-      
+	<div class="container-fluid">
+		<div class="navbar-header">
 
-    </div>
-  </div>
-</nav>
+			<a class="navbar-brand" href="#"> <img class="imageSize"
+				alt="Brand" src="images/logo.ico"> Profile Creator
+			</a>
+
+
+		</div>
+	</div>
+	</nav>
 	<h3>Issue loading page</h3>
 	<p>${errormsg}</p>
 

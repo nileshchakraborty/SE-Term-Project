@@ -9,38 +9,40 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	crossorigin="anonymous">
+
+<link href="image/logo.ico" rel="icon">
 <link rel="stylesheet" type="text/css" href="css/custom.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 	<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      
-      <a class="navbar-brand" href="#">
-        <img class="imageSize" alt="Brand" src="images/logo.ico" >
-              Profile Creator
-      </a>
-      
+	<div class="container-fluid">
+		<div class="navbar-header">
 
-    </div>
-  </div>
-</nav>
-	<div class="container">
-	
-			<table border="2">
-				<tr>
-					<td rowspan="3"><img class="profileImage" alt="Profile Page Image"  src="${image}" /></td>
-					<td><label>Name: Nilesh Chakraborty</label><br/>
-					<label>Description: Student at University at Albany.</label></td>
-				</tr>
-				
-			</table>
-			
-				
-				
+			<a class="navbar-brand" href="#"> <img class="imageSize"
+				alt="Brand" src="images/logo.ico"> Profile Creator
+			</a>
+
+
 		</div>
-	
+	</div>
+	</nav>
+	<div class="container">
+
+		<table border="2">
+			<tr>
+				<td rowspan="3"><img class="profileImage"
+					alt="Profile Page Image" src="${image}" /></td>
+				<td><label>Name: Nilesh Chakraborty</label><br /> <label>Description:
+						Student at University at Albany.</label></td>
+			</tr>
+
+		</table>
+
+
+
+	</div>
+
 
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
 		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
