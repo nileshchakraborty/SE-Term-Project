@@ -23,13 +23,9 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 
 @Controller
 public class ProfileController {
-<<<<<<< HEAD
-	private static BasicAWSCredentials credentials = new BasicAWSCredentials("key",
-			"secret");
-=======
+
 	private static BasicAWSCredentials credentials = new BasicAWSCredentials("secret key",
 			"secret key");
->>>>>>> branch 'master' of git@github.com:nileshchakraborty/SE-Term-Project.git
 
 	@GetMapping(value = "/")
 	public ModelAndView renderPage() {
