@@ -23,8 +23,8 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 
 @Controller
 public class ProfileController {
-	private static BasicAWSCredentials credentials = new BasicAWSCredentials("AKIAIS5XKUSYHRR4VJBA",
-			"E8GOZZIMSzH1cdoG+tUv/jAmh9YnGh4yw111FLgD");
+	private static BasicAWSCredentials credentials = new BasicAWSCredentials("secret key",
+			"secret key");
 
 	@GetMapping(value = "/")
 	public ModelAndView renderPage() {
