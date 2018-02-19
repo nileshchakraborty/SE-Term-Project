@@ -12,14 +12,18 @@
 </head>
 <body>
 	<nav class="navbar navbar-default">
-	<div class="container-fluid">
-		<!-- Brand and toggle get grouped for better mobile display -->
-		<div class="navbar-header">
-			<a class="navbar-brand" href="#"><img alt="PC"
-				src="images/logo.png">Profile Creator</a>
-		</div>
-		</div>
-	</nav>
+  <div class="container-fluid">
+    <div class="navbar-header">
+      
+      <a class="navbar-brand" href="#">
+        <img class="imageSize" alt="Brand" src="images/logo.ico" >
+              Profile Creator
+      </a>
+      
+
+    </div>
+  </div>
+</nav>
 	<h3>Issue loading page</h3>
 	<p>${errormsg}</p>
 
