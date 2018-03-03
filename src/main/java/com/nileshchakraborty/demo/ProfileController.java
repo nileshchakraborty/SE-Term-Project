@@ -2,6 +2,7 @@ package com.nileshchakraborty.demo;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,14 +24,20 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 
 @Controller
 public class ProfileController {
+	@Value("${accessKey}")
+	String accessKey;
 
-	private static BasicAWSCredentials credentials = new BasicAWSCredentials("secret key",
-			"secret key");
+	@Value("${secretKey}")
+	String secretKey;
+	
+	private static BasicAWSCredentials credentials = null;
 
 	@GetMapping(value = "/")
 	public ModelAndView renderPage() {
 		ModelAndView indexPage = new ModelAndView();
 		indexPage.setViewName("index");
+		credentials = new BasicAWSCredentials(accessKey, secretKey);
+
 		return indexPage;
 	}
 
@@ -57,7 +64,7 @@ public class ProfileController {
 			return profilePage;
 		}
 	}
-	
+
 	@GetMapping(value = "/error")
 	public ModelAndView errorHandling() {
 		ModelAndView errorPage = new ModelAndView();

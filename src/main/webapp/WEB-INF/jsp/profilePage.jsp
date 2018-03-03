@@ -29,16 +29,22 @@
 	</nav>
 	<div class="container">
 
-		<table border="2">
-			<tr>
-				<td rowspan="3"><img class="profileImage"
+		<div class="row">
+				<div class="col-2"><img class="profileImage" alt="Profile Page Image" src="http://demotest-nilesh.s3.amazonaws.com/BDYG6039.JPG"></div>
+				<div class="col-5"><label class="control-label"><strong>Nilesh Chakraborty</strong></label><br> <label>
+						Student at University at Albany - MS CS, MCA</label></div>
+			</div>
+
+		<!-- <table border="2" class="table">
+			<tr class="row">
+				<td rowspan="3" class="col-9"><img class="profileImage"
 					alt="Profile Page Image" src="${image}" /></td>
-				<td><label>Name: Nilesh Chakraborty</label><br /> <label>Description:
+				<td class="col-4"><label>Name: Nilesh Chakraborty</label><br /> <label>Description:
 						Student at University at Albany.</label></td>
 			</tr>
 
 		</table>
-
+-->
 
 
 	</div>
