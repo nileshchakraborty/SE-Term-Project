@@ -30,7 +30,7 @@
 	<div class="container">
 
 		<div class="row">
-				<div class="col-2"><img class="profileImage" alt="Profile Page Image" src="http://demotest-nilesh.s3.amazonaws.com/BDYG6039.JPG"></div>
+				<div class="col-2"><img class="profileImage" alt="Profile Page Image" src="${image}"></div>
 				<div class="col-5"><label class="control-label"><strong>Nilesh Chakraborty</strong></label><br> <label>
 						Student at University at Albany - MS CS, MCA</label></div>
 			</div>
