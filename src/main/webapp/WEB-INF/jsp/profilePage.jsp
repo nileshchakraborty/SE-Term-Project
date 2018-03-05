@@ -30,10 +30,17 @@
 	<div class="container">
 
 		<div class="row">
-				<div class="col-2"><img class="profileImage" alt="Profile Page Image" src="${image}"></div>
-				<div class="col-5"><label class="control-label"><strong>Nilesh Chakraborty</strong></label><br> <label>
-						Student at University at Albany - MS CS, MCA</label></div>
+			<div class="col-4">
+				<img class="profileImage" alt="Profile Page Image" src="${image}">
 			</div>
+			<div class="col-5">
+				<label class="control-label"><strong><h4>Nilesh
+						Chakraborty</h4></strong></label><br> <label><h5> Student at University at
+					Albany - MS CS, MCA</h5></label>
+					<p><blockquote>I am a student at University at Albany, studying Master of Computer Science with Specialization in Machine Learning and Data Science and Minor in Software Engineering. I have 3 years of work experience in the field of Java and F.I.X. protocol. I have completed my Master of Computer Application from University of Mumbai, India. I love coding and solving complex algorithm problems.</<blockquote> 
+					</p>
+			</div>
+		</div>
 
 		<!-- <table border="2" class="table">
 			<tr class="row">
