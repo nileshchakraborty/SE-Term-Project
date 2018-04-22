@@ -1,1 +1,4 @@
 /AwsCredentials.properties
+/application.properties
+/keystore.p12
+/user.properties
