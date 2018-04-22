@@ -114,9 +114,6 @@
 					<div id="status"></div>
 				</div>
 			</div>
-			<div class="row">
-				<p id="status">Facebook</p>
-			</div>
 
 
 			<form id="redirectForm" method="post" action="facebookRedirect">

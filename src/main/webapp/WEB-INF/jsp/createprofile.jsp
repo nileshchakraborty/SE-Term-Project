@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@ include file="includes/login-header.jsp"%>
+<%@ include file="includes/header.jsp"%>
 
 
 
@@ -39,7 +39,7 @@
 							<label class="col-md-4 control-label" for="Upload photo">Upload
 								photo</label>
 							<div class="col-md-4">
-								<input id="file" name="file" class="input-file" type="file" value="${user.profileImage}">
+								<input id="file" name="file" class="input-file" type="file">
 							</div>
 						</div>
 
@@ -82,11 +82,11 @@
 						<div class="form-group">
 							<label class="col-md-4 control-label"></label>
 							<div class="col-md-4">
-								<input type="submit" class="btn btn-success"
+								<input type="submit" class="btn btn-submit"
 									placeholder=" Submit"> <span
 									class="glyphicon glyphicon-thumbs-up"></span>
 									<input
-									type="reset" class="btn btn-danger"> <span
+									type="reset" class="btn btn-submit"> <span
 									class="glyphicon glyphicon-remove-sign" placeholder=" Clear"></span>
 								
 							</div>
