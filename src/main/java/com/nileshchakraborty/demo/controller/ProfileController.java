@@ -2,12 +2,7 @@ package com.nileshchakraborty.demo.controller;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.catalina.Context;
@@ -20,11 +15,13 @@ import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -42,6 +39,7 @@ import com.nileshchakraborty.demo.repo.FriendRepository;
 import com.nileshchakraborty.demo.repo.UserRepository;
 
 @Controller
+@SessionAttributes(value={"user","friends"})
 public class ProfileController {
 
 	@Autowired
@@ -57,9 +55,11 @@ public class ProfileController {
 
 	private static BasicAWSCredentials credentials = null;
 
-	@GetMapping(value = "/createprofile")
-	public ModelAndView createProfile() {
+	@PostMapping(value = "/createprofile")
+	public ModelAndView createProfile(@ModelAttribute("user") User u,@RequestParam(name="myEmail") String email) {
 		ModelAndView mv = new ModelAndView();
+		u = userRepository.findByEmail(email);
+		mv.addObject("user", u);
 		mv.setViewName("createprofile");
 		return mv;
 	}
@@ -69,51 +69,46 @@ public class ProfileController {
 		return userRepository.findAll();
 	}
 
-	@GetMapping(value = "/user")
-	public ModelAndView getSingleUser(@RequestParam(name = "email") String email) {
-		ModelAndView mv = new ModelAndView();
-		try {
-			User u = userRepository.findByEmail(email);
-			mv.addObject("user", u);
-			mv.setViewName("profilePage");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return mv;
-	}
-
 	@PostMapping(value = "/facebookRedirect")
-	public ModelAndView handleRedirect(@RequestParam(name = "myId") String myId,
+	public ModelAndView handleRedirect(Model model,@RequestParam(name = "myId") String myId,
 			@RequestParam(name = "myName") String myName, @RequestParam(name = "myFriend") String myFriend,
 			@RequestParam(name = "myEmail") String myEmail, HttpServletRequest req) {
 		ModelAndView mv = new ModelAndView();
 		System.out.println(myId + " " + myName + " " + myFriend + " " + myEmail);
 
 		try {
-			User u = userRepository.findByUserId(myId);
-			if (u != null) {
-				mv.addObject("user", u);
-				mv.setViewName("profilePage");
-			} else {
-				u = new User();
-				u.setUserid(myId);
-				u.setName(myName);
-				u.setEmail(myEmail);
-				String[] splitted = myFriend.split("/");
-				for (int i = 0; i < splitted.length - 1; i++) {
-					Friends f = new Friends();
-					f.setFriendId(splitted[i]);
-					f.setFriendName(splitted[i + 1]);
-					f.setUserId(myId);
-					friendRepository.save(f);
-					i++;
+			
+				User u = userRepository.findByUserId(myId);
+				if (u != null) {
+					mv.addObject("user", u);
+					mv.setViewName("profilePage");
+				} else {
+					u = new User();
+					u.setUserid(myId);
+					u.setName(myName);
+					u.setEmail(myEmail);
+					String[] splitted = myFriend.split("/");
+					for (int i = 0; i < splitted.length - 1; i++) {
+						Friends f = new Friends();
+						f.setFriendId(splitted[i]);
+						f.setFriendName(splitted[i + 1]);
+						f.setUserId(myId);
+						if(!model.containsAttribute("friends"))
+							model.addAttribute("friends", f);
+						
+						friendRepository.save(f);
+						i++;
+					}
+					u.setFriends(myFriend);
+					if(!model.containsAttribute("user")) 
+						model.addAttribute("user",u);
+					userRepository.save(u);
+					mv.addObject("user", u);
+					mv.setViewName("createprofile");
 				}
-				u.setFriends(myFriend);
-				userRepository.save(u);
-				mv.addObject("user", u);
-				mv.setViewName("createprofile");
-			}
-
+			
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -157,9 +152,9 @@ public class ProfileController {
 	}
 
 	@PostMapping(value = "/viewfriends")
-	public ModelAndView friendsPage(@RequestParam(name="email") String email) {
+	public ModelAndView friendsPage(@ModelAttribute("user") User u,@ModelAttribute("friends") Friends f, @RequestParam(name="email") String email) {
 		ModelAndView mv = new ModelAndView();
-		User u = userRepository.findByEmail(email);
+		
 		List<Friends> friends = friendRepository.findByUserId(u.getUserid());
 		
 		mv.addObject("friends", friends);
@@ -196,7 +191,6 @@ public class ProfileController {
 			u.setProfileImage(s3Origin);
 			userRepository.save(u);
 			List<Friends> f = friendRepository.findByUserId(u.getUserid());
-			
 			
 			mv.addObject("user", u);
 			mv.addObject("friends", f);
@@ -243,7 +237,7 @@ public class ProfileController {
 	private Connector initiateHttpConnector() {
 		Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
 		connector.setScheme("http");
-		connector.setPort(8888);
+		connector.setPort(8080);
 		connector.setSecure(false);
 		connector.setRedirectPort(8443);
 

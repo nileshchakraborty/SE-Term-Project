@@ -54,7 +54,7 @@
 		FB.getLoginStatus(function(response) {
 			statusChangeCallback(response);
 		});
-		
+
 	};
 
 	// Load the SDK asynchronously
@@ -124,5 +124,7 @@
 					name="myName" /> <input type="hidden" name="myFriend" /> <input
 					type="hidden" name="myEmail" />
 			</form>
-
-			<%@ include file="includes/footer.jsp"%>
+		</div>
+	</div>
+</div>
+<%@ include file="includes/footer.jsp"%>

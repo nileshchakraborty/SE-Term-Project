@@ -17,6 +17,16 @@
 				<label>View My Friends</label>
 				<input type="submit" class="btn btn-submit">
 			</form>
+			
+			
+				<form method="post" action="/createprofile">
+				 <input
+					type="hidden" name="myEmail" value="${user.email}"/>
+				
+				<label>Edit Profile</label>
+				
+				<input type="submit" class="btn btn-submit">
+			</form>
 		</div>
 		
 	
