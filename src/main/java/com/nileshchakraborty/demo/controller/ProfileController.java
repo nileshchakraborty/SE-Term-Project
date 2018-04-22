@@ -1,6 +1,7 @@
 package com.nileshchakraborty.demo.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -75,30 +76,38 @@ public class ProfileController {
 			@RequestParam(name = "myEmail") String myEmail, HttpServletRequest req) {
 		ModelAndView mv = new ModelAndView();
 		System.out.println(myId + " " + myName + " " + myFriend + " " + myEmail);
-
+		
 		try {
 			
 				User u = userRepository.findByUserId(myId);
 				if (u != null) {
+					myName = u.getName();
+					myFriend = u.getFriends();
+					myId = u.getUserid();
+					myEmail = u.getEmail();
+					
 					mv.addObject("user", u);
 					mv.setViewName("profilePage");
 				} else {
 					u = new User();
-					u.setUserid(myId);
-					u.setName(myName);
-					u.setEmail(myEmail);
+					u.setUserid(myId.trim());
+					u.setName(myName.trim());
+					u.setEmail(myEmail.trim());
 					String[] splitted = myFriend.split("/");
+					List<Friends> list = new ArrayList<>();
 					for (int i = 0; i < splitted.length - 1; i++) {
 						Friends f = new Friends();
 						f.setFriendId(splitted[i]);
 						f.setFriendName(splitted[i + 1]);
-						f.setUserId(myId);
-						if(!model.containsAttribute("friends"))
-							model.addAttribute("friends", f);
+						f.setUserId(myId.trim());
+						list.add(f);
 						
 						friendRepository.save(f);
 						i++;
 					}
+					if(!model.containsAttribute("friends"))
+						model.addAttribute("friends", list);
+						
 					u.setFriends(myFriend);
 					if(!model.containsAttribute("user")) 
 						model.addAttribute("user",u);
@@ -152,9 +161,9 @@ public class ProfileController {
 	}
 
 	@PostMapping(value = "/viewfriends")
-	public ModelAndView friendsPage(@ModelAttribute("user") User u,@ModelAttribute("friends") Friends f, @RequestParam(name="email") String email) {
+	public ModelAndView friendsPage(@RequestParam(name="email") String email) {
 		ModelAndView mv = new ModelAndView();
-		
+		User u = userRepository.findByEmail(email);
 		List<Friends> friends = friendRepository.findByUserId(u.getUserid());
 		
 		mv.addObject("friends", friends);
@@ -190,6 +199,7 @@ public class ProfileController {
 			u.setEmail(email);
 			u.setProfileImage(s3Origin);
 			userRepository.save(u);
+			
 			List<Friends> f = friendRepository.findByUserId(u.getUserid());
 			
 			mv.addObject("user", u);
@@ -197,7 +207,7 @@ public class ProfileController {
 			
 			mv.setViewName("profilePage");
 			return mv;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			mv.addObject("errormsg", e.getMessage());
