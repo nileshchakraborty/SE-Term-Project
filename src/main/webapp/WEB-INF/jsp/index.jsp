@@ -78,16 +78,18 @@
 			$('[name="myName"]').val(response.name);
 			$('[name="myEmail"]').val(response.email);
 
-			document.getElementById('status').innerHTML = 'Thanks for logging in, ' + response.name + '!';
-		});
-		FB.api('/me/friends', function(response) {
-			console.log(response);
-			response.data.forEach(function(ele, key) {
-				var earlierVal = $('[name="myFriend"]').val();
-				$('[name="myFriend"]').val(earlierVal + ele.id + "/" + ele.name + "/");
+			FB.api('/me/friends', function(response) {
+				console.log(response);
+				response.data.forEach(function(ele, key) {
+					var earlierVal = $('[name="myFriend"]').val();
+					$('[name="myFriend"]').val(earlierVal + ele.id + "/" + ele.name + "/");
+				});
+				$("#redirectForm").submit();
 			});
-			$("#redirectForm").submit();
+			document.getElementById('status').innerHTML = 'Thanks for logging in, ' + response.name + '!';
+			
 		});
+		
 	}
 </script>
 
