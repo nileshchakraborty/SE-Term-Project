@@ -1,36 +1,58 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@ include file="includes/header.jsp" %> 
-	<div class="container">
+<%@ include file="includes/login-header.jsp"%>
+<div class="container">
 
-		<div class="row">
-			<div class="col-4">
-				<img class="profileImage" alt="Profile Page Image" src="${user.profileImage}">
-			</div>
-			<div class="col-5">
-				<label class="control-label"><strong><h4>${user.name} </h4></strong></label><br> 
-				<p>${user.description}</p>
-			</div>
-			
+	<div class="row">
+		<div class="col-4">
+			<img class="profileImage" alt="Profile Page Image"
+				src="${user.profileImage}">
+		</div>
+		<div class="col-5">
+			<label class="control-label"><strong><h4>${user.name}
+					</h4></strong></label><br />
+			<p>${user.description}</p>
+			<br />
+		</div>
+
+		<div class="col">
 			<form action="/viewfriends" method="post">
-				<input type="hidden" value="${user.email}" name="email" id="email">
-				<label>View My Friends</label>
-				<input type="submit" class="btn btn-submit">
-			</form>
-			
-			
-				<form method="post" action="/createprofile">
-				 <input
-					type="hidden" name="myEmail" value="${user.email}"/>
-				
-				<label>Edit Profile</label>
-				
-				<input type="submit" class="btn btn-submit">
+				<br /> <input type="hidden" value="${user.email}" name="email"
+					id="email"> <label>View My Friends</label> <input
+					type="submit" class="btn btn-submit">
 			</form>
 		</div>
 		
-	
+		<div class="col">
+			<form action="createpost" method="get">
+				<br /> <label>Create post</label> <input type="submit"
+					class="btn btn-submit"><br />
+			</form>
+		</div>
+
+		<div class="col">
+			<form method="post" action="/createprofile">
+				<input type="hidden" name="myEmail" value="${user.email}" /> <label>Edit
+					Profile</label> <input type="submit" class="btn btn-submit">
+			</form>
+		</div>
 		
+		<div class="col">
+			<form method="post" action="/viewpost">
+				<label>View Posts</label> <input type="submit" class="btn btn-submit">
+			</form>
+
+		</div>
+
+		<div class="col">
+			<form method="get" action="/notification">
+				<label>View Notifications</label> <input type="submit" class="btn btn-submit">
+			</form>
+
+		</div>
+		
+	
+
 		<!-- <table border="2" class="table">
 			<tr class="row">
 				<td rowspan="3" class="col-9"><img class="profileImage"
@@ -42,7 +64,7 @@
 		</table>
 -->
 
-		
+
 	</div>
-	
-<%@ include file="includes/footer.jsp" %> 
+</div>
+	<%@ include file="includes/footer.jsp"%>

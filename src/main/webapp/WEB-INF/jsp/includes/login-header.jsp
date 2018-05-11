@@ -1,13 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>'
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Profile Creator</title>
+<link href="https://vjs.zencdn.net/6.6.3/video-js.css" rel="stylesheet">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/videojs-record/2.1.0/css/videojs.record.css"
+	rel="stylesheet">
 
 <link
 	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"
@@ -26,38 +31,45 @@
 
 <link rel="stylesheet" type="text/css" href="css/custom.css">
 
-<link href="image/logo.ico" rel="icon">
-
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="">
-
+<style>
+/* change player background color */
+#myAudio {
+	background-color: #9FD6BA;
+}
+</style>
 
 </head>
 <body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light"> <a
+		class="navbar-brand" href="/"> <img class="imageSize" alt="Brand"
+		src="images/logo.ico"> Profile Creator
+	</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse"
+		data-target="#navbarSupportedContent"
+		aria-controls="navbarSupportedContent" aria-expanded="false"
+		aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
 
-
-	<nav class="navbar navbar-default">
-	<div class="container-fluid">
-		<div class="navbar-header">
-
-			<a class="navbar-brand" href="#"> <img class="imageSize"
-				alt="Brand" src="images/logo.ico"> Profile Creator
-			</a>
-
-
-		</div>
-		<div class="collapse navbar-collapse"
-			id="bs-example-navbar-collapse-1">
-			<ul class="nav navbar-nav">
-				<li class="active"><a href="/">Login</a></li>
-				<li><a href="/editProfile">Edit Profile</a></li>
-				<li><a href="/viewfriend">View Friend</a></li>
-			</ul>
-		</div>
-		<!-- /.navbar-collapse -->
-
+	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+		<ul class="navbar-nav mr-auto">
+		
+			<li  class="nav-item"> <a class="nav-link" href="/post"> Create Post </a> </li>
+			<li  class="nav-item"> <a class="nav-link" href="/viewpost"> View Post </a> </li>
+			<li  class="nav-item"> <a class="nav-link" href="/notification"> View Notifications </a> </li>
+			<li  class="nav-item"> </li>
+			<li  class="nav-item"> </li>
+			<li  class="nav-item"> <a class="nav-link" href="/logout"> Logout </a> </li>
+		</ul>
+		<form class="form-inline my-2 my-lg-0" method="post" action="search">
+			<input class="form-control mr-sm-2" type="search"
+				placeholder="Search Friend" aria-label="Search" id="search" name="search">
+			<button class="btn btn-outline-success my-2 my-sm-0" type="submit"> Search Friend </button>
+		</form>
 	</div>
 	</nav>

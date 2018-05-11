@@ -34,118 +34,158 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.nileshchakraborty.demo.dao.Comment;
 import com.nileshchakraborty.demo.dao.Friends;
+import com.nileshchakraborty.demo.dao.Post;
 import com.nileshchakraborty.demo.dao.User;
+import com.nileshchakraborty.demo.repo.CommentRepository;
 import com.nileshchakraborty.demo.repo.FriendRepository;
+import com.nileshchakraborty.demo.repo.PostRepository;
 import com.nileshchakraborty.demo.repo.UserRepository;
+import com.nileshchakraborty.demo.service.UploadToS3;
 
 @Controller
-@SessionAttributes(value={"user","friends"})
+@SessionAttributes(value = { "user", "friends" })
 public class ProfileController {
-
+	
+	@Autowired
+	private UploadToS3 upload;
+	
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private FriendRepository friendRepository;
-
-	@Value("${accessKey}")
-	String accessKey;
-
-	@Value("${secretKey}")
-	String secretKey;
-
-	private static BasicAWSCredentials credentials = null;
-
+	@Autowired
+	private PostRepository postRepository;
+	
+	@Autowired
+	private CommentRepository commentRepository;
+	@PostMapping(value = "/search")
+	public ModelAndView search(HttpServletRequest req,@RequestParam("search") String search) {
+		ModelAndView mav = new ModelAndView("search");
+		mav.addObject("search", search);
+		return new ModelAndView("search");
+	}
+	
+	
 	@PostMapping(value = "/createprofile")
-	public ModelAndView createProfile(@ModelAttribute("user") User u,@RequestParam(name="myEmail") String email) {
+	public ModelAndView createProfile(HttpServletRequest req) {
+		User u = (User) req.getSession().getAttribute("user");
 		ModelAndView mv = new ModelAndView();
-		u = userRepository.findByEmail(email);
+		
 		mv.addObject("user", u);
 		mv.setViewName("createprofile");
 		return mv;
 	}
 
-	@GetMapping(path = "/viewAllUsers")
-	public @ResponseBody Iterable<User> getAllUsers() {
-		return userRepository.findAll();
-	}
-
 	@PostMapping(value = "/facebookRedirect")
-	public ModelAndView handleRedirect(Model model,@RequestParam(name = "myId") String myId,
+	public ModelAndView handleRedirect(Model model, @RequestParam(name = "myId") String myId,
 			@RequestParam(name = "myName") String myName, @RequestParam(name = "myFriend") String myFriend,
 			@RequestParam(name = "myEmail") String myEmail, HttpServletRequest req) {
 		ModelAndView mv = new ModelAndView();
 		System.out.println(myId + " " + myName + " " + myFriend + " " + myEmail);
-		
+		if(myId.equals( "102785203929504")) {
+			return new ModelAndView("admin");
+		}
 		try {
-			
-				User u = userRepository.findByUserId(myId);
-				if (u != null) {
-					myName = u.getName();
-					myFriend = u.getFriends();
-					myId = u.getUserid();
-					myEmail = u.getEmail();
-					
-					mv.addObject("user", u);
-					mv.setViewName("profilePage");
-				} else {
-					u = new User();
-					u.setUserid(myId.trim());
-					u.setName(myName.trim());
-					u.setEmail(myEmail.trim());
-					String[] splitted = myFriend.split("/");
-					List<Friends> list = new ArrayList<>();
-					for (int i = 0; i < splitted.length - 1; i++) {
-						Friends f = new Friends();
-						f.setFriendId(splitted[i]);
-						f.setFriendName(splitted[i + 1]);
-						f.setUserId(myId.trim());
-						list.add(f);
-						
-						friendRepository.save(f);
-						i++;
-					}
-					if(!model.containsAttribute("friends"))
-						model.addAttribute("friends", list);
-						
-					u.setFriends(myFriend);
-					if(!model.containsAttribute("user")) 
-						model.addAttribute("user",u);
-					userRepository.save(u);
-					mv.addObject("user", u);
-					mv.setViewName("createprofile");
+
+			User u = userRepository.findByUserId(myId);
+			if (u != null) {
+				myName = u.getName();
+				myFriend = u.getFriends();
+				myId = u.getUserid();
+				myEmail = u.getEmail();
+
+				mv.addObject("user", u);
+				mv.setViewName("profilePage");
+			} else {
+				u = new User();
+				u.setUserid(myId.trim());
+				u.setName(myName.trim());
+				u.setEmail(myEmail.trim());
+				String[] splitted = myFriend.split("/");
+				List<Friends> list = new ArrayList<>();
+				for (int i = 0; i < splitted.length - 1; i++) {
+					Friends f = new Friends();
+					f.setFriendId(splitted[i]);
+					f.setFriendName(splitted[i + 1]);
+					f.setUserId(myId.trim());
+					list.add(f);
+
+					friendRepository.save(f);
+					i++;
 				}
-			
-			
-			
+				if (!model.containsAttribute("friends"))
+					model.addAttribute("friends", list);
+
+				u.setFriends(myFriend);
+				if (!model.containsAttribute("user"))
+					model.addAttribute("user", u);
+				userRepository.save(u);
+				mv.addObject("user", u);
+				mv.setViewName("createprofile");
+			}
+
+			req.getSession().setAttribute("user", u);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return mv;
 	}
-
-	@GetMapping(value = "/profilePage")
-	public ModelAndView profilePage() {
-
+	@PostMapping(value = "/viewpost")
+	public ModelAndView viewImages(HttpServletRequest req) {
+		User user = (User) req.getSession().getAttribute("user");
+		
 		ModelAndView indexPage = new ModelAndView();
+		List<Post> posts = (List<Post>) postRepository.findByUserId(user.getUserid());
+		indexPage.addObject("user",user);
+		indexPage.addObject("posts",posts);
+		indexPage.setViewName("viewpost");
 
+		return indexPage;
+	}
+	@GetMapping(value = "/profilePage")
+	public ModelAndView profilePage(HttpServletRequest req) {
+		User user = (User) req.getSession().getAttribute("user");
+		
+		ModelAndView indexPage = new ModelAndView();
+		List<Post> posts = postRepository.findByUserId(user.getUserid());
+		indexPage.addObject(user);
+		indexPage.addObject(posts);
 		indexPage.setViewName("profilePage");
 
 		return indexPage;
 	}
-
+	
+	
+	@GetMapping(value = "/viewimage")
+	public ModelAndView viewImagePage(HttpServletRequest req, @RequestParam("id") String postId) {
+		ModelAndView mav = new ModelAndView("viewimage");
+		Post post = (Post) req.getSession().getAttribute("post");
+		User user = (User) req.getSession().getAttribute("user");
+		List<Comment> comments = commentRepository.findByPostId(Long.parseLong(postId));
+		mav.addObject("post",post);
+		mav.addObject("comments", comments);
+		mav.addObject("user", user);
+		Post p = postRepository.findByPostId(Long.parseLong(postId));
+		mav.addObject("specpost", p);
+		return mav;
+	}
+	
+	
 	@GetMapping(value = "/")
-	public ModelAndView renderPage() {
+	public ModelAndView renderPage(HttpServletRequest req) {
 
 		ModelAndView indexPage = new ModelAndView();
 		indexPage.setViewName("index");
-		credentials = new BasicAWSCredentials(accessKey, secretKey);
+		
 
 		return indexPage;
 	}
 
 	@GetMapping(value = "/adminlogin")
-	public ModelAndView adminLoginPage() {
+	public ModelAndView adminLoginPage(HttpServletRequest req) {
 		ModelAndView loginPage = new ModelAndView();
 		loginPage.setViewName("adminlogin");
 
@@ -153,19 +193,33 @@ public class ProfileController {
 	}
 
 	@GetMapping(value = "/admin")
-	public ModelAndView adminPage() {
+	public ModelAndView adminPage(HttpServletRequest req) {
 		ModelAndView loginPage = new ModelAndView();
 		loginPage.setViewName("admin");
 
-		return loginPage;	
+		return loginPage;
 	}
 
-	@PostMapping(value = "/viewfriends")
-	public ModelAndView friendsPage(@RequestParam(name="email") String email) {
+	@PostMapping(value = "/viewfriendsfriend")
+	public ModelAndView viewfriendsfriendPage(@RequestParam(name = "email") String email, HttpServletRequest req) {
+	
 		ModelAndView mv = new ModelAndView();
 		User u = userRepository.findByEmail(email);
 		List<Friends> friends = friendRepository.findByUserId(u.getUserid());
-		
+
+		mv.addObject("friends", friends);
+		mv.setViewName("friends");
+
+		return mv;
+	}
+	
+	@PostMapping(value = "/viewfriends")
+	public ModelAndView friendsPage(@RequestParam(name = "email") String email, HttpServletRequest req) {
+		User u = (User) req.getSession().getAttribute("user");
+		ModelAndView mv = new ModelAndView();
+		//User u = userRepository.findByEmail(email);
+		List<Friends> friends = friendRepository.findByUserId(u.getUserid());
+
 		mv.addObject("friends", friends);
 		mv.setViewName("friends");
 
@@ -173,7 +227,7 @@ public class ProfileController {
 	}
 
 	@GetMapping(value = "/post")
-	public ModelAndView postPage() {
+	public ModelAndView postPage(HttpServletRequest req) {
 		ModelAndView loginPage = new ModelAndView();
 		loginPage.setViewName("post");
 
@@ -182,29 +236,25 @@ public class ProfileController {
 
 	@PostMapping(value = "/upload")
 	public ModelAndView uploadToS3(@RequestParam("myName") String name, @RequestParam("myEmail") String email,
-			@RequestParam("description") String description, @RequestParam("file") MultipartFile image)
+			@RequestParam("description") String description, @RequestParam("file") MultipartFile image, HttpServletRequest req)
 			throws IOException {
+		User u = (User) req.getSession().getAttribute("user");
 		ModelAndView mv = new ModelAndView();
-		User u = userRepository.findByEmail(email);
-		AmazonS3 s3client = AmazonS3ClientBuilder.standard()
-				.withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(Regions.US_EAST_1).build();
-
+		
 		try {
-			PutObjectRequest putReq = new PutObjectRequest("demotest-nilesh", image.getOriginalFilename(),
-					image.getInputStream(), new ObjectMetadata()).withCannedAcl(CannedAccessControlList.PublicRead);
-			s3client.putObject(putReq);
-			String s3Origin = "http://" + "demotest-nilesh" + ".s3.amazonaws.com/" + image.getOriginalFilename();
+			
+			String s3Origin = upload.uploadToS3(image.getOriginalFilename(), image.getInputStream());
 			u.setDescription(description);
 			u.setName(name);
 			u.setEmail(email);
 			u.setProfileImage(s3Origin);
 			userRepository.save(u);
-			
+
 			List<Friends> f = friendRepository.findByUserId(u.getUserid());
-			
+
 			mv.addObject("user", u);
 			mv.addObject("friends", f);
-			
+
 			mv.setViewName("profilePage");
 			return mv;
 		} catch (Exception e) {
@@ -217,13 +267,19 @@ public class ProfileController {
 	}
 
 	@GetMapping(value = "error")
-	public ModelAndView errorHandling() {
+	public ModelAndView errorHandling(HttpServletRequest req) {
 		ModelAndView errorPage = new ModelAndView();
 		errorPage.addObject("errormsg", "Error Occured!");
 		errorPage.setViewName("error");
 		return errorPage;
 	}
 
+	@GetMapping(value="logout")
+	public ModelAndView logout(HttpServletRequest req) {
+		req.getSession().invalidate();
+		return new ModelAndView("index");
+	}
+	
 	@Bean
 	public EmbeddedServletContainerFactory servletContainer() {
 		TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory() {

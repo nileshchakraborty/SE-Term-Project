@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="includes/header.jsp" %>
+<%@ include file="includes/login-header.jsp" %>
 
 
 <body>
@@ -18,8 +18,9 @@
 			<tbody>
 				<c:forEach items="${friends}" var="friend">
 					<tr>
-						<td><c:out value="${friend.friendId}"/></td>
-						<td><c:out value="${friend.friendName}"/></td>
+						<td><a href="/viewfriendsprofile?id=${friend.friendId}">${friend.friendId}</a></td>
+						<td><a href="/viewfriendsprofile?id=${friend.friendId}">${friend.friendName}</a></td>
+						
 					</tr>
 				</c:forEach>
 			</tbody>
