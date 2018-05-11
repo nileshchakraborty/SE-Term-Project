@@ -95,20 +95,22 @@ public class PostController {
 			fos.close();
 		}
 		try {
-			if (u == null) throw new NullPointerException("User session not defined");
 			
-			String uid = u.getUserid(); 
-			String post = "1";
-			String timestamp = ""+ System.nanoTime();
-			String s3Origin = upload.uploadToS3(uid+"_"+post+"_"+timestamp+".png", new FileInputStream(file));
-			p = new Post();
-			p.setUserId(u.getUserid());
-			p.setImageUrl(s3Origin);
-			req.getSession().setAttribute("post", p);
-			mv.addObject("user", u);
-			mv.addObject("post",p);
-			mv.setViewName("postaudio");
-			return mv;
+			if (u != null) {
+				
+				String uid = u.getUserid(); 
+				String post = "1";
+				String timestamp = ""+ System.nanoTime();
+				String s3Origin = upload.uploadToS3(uid+"_"+post+"_"+timestamp+".png", new FileInputStream(file));
+				p = new Post();
+				p.setUserId(u.getUserid());
+				p.setImageUrl(s3Origin);
+				req.getSession().setAttribute("post", p);
+				mv.addObject("user", u);
+				mv.addObject("post",p);
+				mv.setViewName("postaudio");
+				
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -116,7 +118,7 @@ public class PostController {
 			mv.setViewName("error");
 			return mv;
 		}
-		
+		return mv;
 		
 	}
 	@PostMapping(value = "/analyseaudiopost")

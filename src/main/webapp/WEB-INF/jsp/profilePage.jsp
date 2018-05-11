@@ -3,8 +3,8 @@
 <%@ include file="includes/login-header.jsp"%>
 <div class="container">
 
-	<div class="row">
-		<div class="col-4">
+	<div class="row-5">
+		<div class="col-5">
 			<img class="profileImage" alt="Profile Page Image"
 				src="${user.profileImage}">
 		</div>
@@ -14,19 +14,20 @@
 			<p>${user.description}</p>
 			<br />
 		</div>
-
+	</div>
+	<div class="row">
 		<div class="col">
 			<form action="/viewfriends" method="post">
-				<br /> <input type="hidden" value="${user.email}" name="email"
+				<input type="hidden" value="${user.email}" name="email"
 					id="email"> <label>View My Friends</label> <input
 					type="submit" class="btn btn-submit">
 			</form>
 		</div>
-		
+
 		<div class="col">
 			<form action="createpost" method="get">
-				<br /> <label>Create post</label> <input type="submit"
-					class="btn btn-submit"><br />
+				 <label>Create post</label> <input type="submit"
+					class="btn btn-submit">
 			</form>
 		</div>
 
@@ -36,22 +37,24 @@
 					Profile</label> <input type="submit" class="btn btn-submit">
 			</form>
 		</div>
-		
+
 		<div class="col">
 			<form method="post" action="/viewpost">
-				<label>View Posts</label> <input type="submit" class="btn btn-submit">
+				<label>View Posts</label> <input type="submit"
+					class="btn btn-submit">
 			</form>
 
 		</div>
 
 		<div class="col">
 			<form method="get" action="/notification">
-				<label>View Notifications</label> <input type="submit" class="btn btn-submit">
+				<label>View Notifications</label> <input type="submit"
+					class="btn btn-submit">
 			</form>
 
 		</div>
-		
-	
+
+
 
 		<!-- <table border="2" class="table">
 			<tr class="row">
@@ -67,4 +70,4 @@
 
 	</div>
 </div>
-	<%@ include file="includes/footer.jsp"%>
+<%@ include file="includes/footer.jsp"%>

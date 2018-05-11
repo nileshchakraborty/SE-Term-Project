@@ -58,7 +58,7 @@
 
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
 		<ul class="navbar-nav mr-auto">
-		
+			<li  class="nav-item"> <a class="nav-link" href="/profilePage"> Profile Home </a></li>
 			<li  class="nav-item"> <a class="nav-link" href="/post"> Create Post </a> </li>
 			<li  class="nav-item"> <a class="nav-link" href="/viewpost"> View Post </a> </li>
 			<li  class="nav-item"> <a class="nav-link" href="/notification"> View Notifications </a> </li>

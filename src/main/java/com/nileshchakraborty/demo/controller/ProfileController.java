@@ -133,7 +133,8 @@ public class ProfileController {
 		}
 		return mv;
 	}
-	@PostMapping(value = "/viewpost")
+	
+	@GetMapping(value = "/viewpost")
 	public ModelAndView viewImages(HttpServletRequest req) {
 		User user = (User) req.getSession().getAttribute("user");
 		
@@ -145,6 +146,7 @@ public class ProfileController {
 
 		return indexPage;
 	}
+	
 	@GetMapping(value = "/profilePage")
 	public ModelAndView profilePage(HttpServletRequest req) {
 		User user = (User) req.getSession().getAttribute("user");
