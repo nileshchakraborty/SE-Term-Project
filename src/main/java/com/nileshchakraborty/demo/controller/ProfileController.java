@@ -47,32 +47,32 @@ import com.nileshchakraborty.demo.service.UploadToS3;
 @Controller
 @SessionAttributes(value = { "user", "friends" })
 public class ProfileController {
-	
+
 	@Autowired
 	private UploadToS3 upload;
-	
+
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private FriendRepository friendRepository;
 	@Autowired
 	private PostRepository postRepository;
-	
+
 	@Autowired
 	private CommentRepository commentRepository;
+
 	@PostMapping(value = "/search")
-	public ModelAndView search(HttpServletRequest req,@RequestParam("search") String search) {
+	public ModelAndView search(HttpServletRequest req, @RequestParam("search") String search) {
 		ModelAndView mav = new ModelAndView("search");
 		mav.addObject("search", search);
 		return new ModelAndView("search");
 	}
-	
-	
+
 	@PostMapping(value = "/createprofile")
 	public ModelAndView createProfile(HttpServletRequest req) {
 		User u = (User) req.getSession().getAttribute("user");
 		ModelAndView mv = new ModelAndView();
-		
+
 		mv.addObject("user", u);
 		mv.setViewName("createprofile");
 		return mv;
@@ -82,11 +82,14 @@ public class ProfileController {
 	public ModelAndView handleRedirect(Model model, @RequestParam(name = "myId") String myId,
 			@RequestParam(name = "myName") String myName, @RequestParam(name = "myFriend") String myFriend,
 			@RequestParam(name = "myEmail") String myEmail, HttpServletRequest req) {
+
 		ModelAndView mv = new ModelAndView();
-		System.out.println(myId + " " + myName + " " + myFriend + " " + myEmail);
-		if(myId.equals( "102785203929504")) {
+
+		if (myId.equals("102785203929504") || myEmail.equals("qdfdgvlpub_1525577600@tfbnw.net")) {
 			return new ModelAndView("admin");
 		}
+		System.out.println(myId + " " + myName + " " + myFriend + " " + myEmail);
+
 		try {
 
 			User u = userRepository.findByUserId(myId);
@@ -131,26 +134,27 @@ public class ProfileController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		return mv;
 	}
-	
+
 	@GetMapping(value = "/viewpost")
 	public ModelAndView viewImages(HttpServletRequest req) {
 		User user = (User) req.getSession().getAttribute("user");
-		
+
 		ModelAndView indexPage = new ModelAndView();
 		List<Post> posts = (List<Post>) postRepository.findByUserId(user.getUserid());
-		indexPage.addObject("user",user);
-		indexPage.addObject("posts",posts);
+		indexPage.addObject("user", user);
+		indexPage.addObject("posts", posts);
 		indexPage.setViewName("viewpost");
 
 		return indexPage;
 	}
-	
+
 	@GetMapping(value = "/profilePage")
 	public ModelAndView profilePage(HttpServletRequest req) {
 		User user = (User) req.getSession().getAttribute("user");
-		
+
 		ModelAndView indexPage = new ModelAndView();
 		List<Post> posts = postRepository.findByUserId(user.getUserid());
 		indexPage.addObject(user);
@@ -159,29 +163,26 @@ public class ProfileController {
 
 		return indexPage;
 	}
-	
-	
+
 	@GetMapping(value = "/viewimage")
 	public ModelAndView viewImagePage(HttpServletRequest req, @RequestParam("id") String postId) {
 		ModelAndView mav = new ModelAndView("viewimage");
 		Post post = (Post) req.getSession().getAttribute("post");
 		User user = (User) req.getSession().getAttribute("user");
 		List<Comment> comments = commentRepository.findByPostId(Long.parseLong(postId));
-		mav.addObject("post",post);
+		mav.addObject("post", post);
 		mav.addObject("comments", comments);
 		mav.addObject("user", user);
 		Post p = postRepository.findByPostId(Long.parseLong(postId));
 		mav.addObject("specpost", p);
 		return mav;
 	}
-	
-	
+
 	@GetMapping(value = "/")
 	public ModelAndView renderPage(HttpServletRequest req) {
 
 		ModelAndView indexPage = new ModelAndView();
 		indexPage.setViewName("index");
-		
 
 		return indexPage;
 	}
@@ -204,7 +205,7 @@ public class ProfileController {
 
 	@PostMapping(value = "/viewfriendsfriend")
 	public ModelAndView viewfriendsfriendPage(@RequestParam(name = "email") String email, HttpServletRequest req) {
-	
+
 		ModelAndView mv = new ModelAndView();
 		User u = userRepository.findByEmail(email);
 		List<Friends> friends = friendRepository.findByUserId(u.getUserid());
@@ -214,12 +215,12 @@ public class ProfileController {
 
 		return mv;
 	}
-	
+
 	@PostMapping(value = "/viewfriends")
 	public ModelAndView friendsPage(@RequestParam(name = "email") String email, HttpServletRequest req) {
 		User u = (User) req.getSession().getAttribute("user");
 		ModelAndView mv = new ModelAndView();
-		//User u = userRepository.findByEmail(email);
+		// User u = userRepository.findByEmail(email);
 		List<Friends> friends = friendRepository.findByUserId(u.getUserid());
 
 		mv.addObject("friends", friends);
@@ -238,13 +239,13 @@ public class ProfileController {
 
 	@PostMapping(value = "/upload")
 	public ModelAndView uploadToS3(@RequestParam("myName") String name, @RequestParam("myEmail") String email,
-			@RequestParam("description") String description, @RequestParam("file") MultipartFile image, HttpServletRequest req)
-			throws IOException {
+			@RequestParam("description") String description, @RequestParam("file") MultipartFile image,
+			HttpServletRequest req) throws IOException {
 		User u = (User) req.getSession().getAttribute("user");
 		ModelAndView mv = new ModelAndView();
-		
+
 		try {
-			
+
 			String s3Origin = upload.uploadToS3(image.getOriginalFilename(), image.getInputStream());
 			u.setDescription(description);
 			u.setName(name);
@@ -276,12 +277,12 @@ public class ProfileController {
 		return errorPage;
 	}
 
-	@GetMapping(value="logout")
+	@GetMapping(value = "logout")
 	public ModelAndView logout(HttpServletRequest req) {
 		req.getSession().invalidate();
 		return new ModelAndView("index");
 	}
-	
+
 	@Bean
 	public EmbeddedServletContainerFactory servletContainer() {
 		TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory() {

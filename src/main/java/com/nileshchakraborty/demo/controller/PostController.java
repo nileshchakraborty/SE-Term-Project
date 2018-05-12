@@ -41,16 +41,16 @@ public class PostController {
 
 	@Autowired
 	private UploadToS3 upload;
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private FriendRepository friendRepository;
-	
+
 	@Autowired
 	private PostRepository postRepository;
-	
+
 	@Autowired
 	private NotificationRepository notificationRepository;
 
@@ -60,56 +60,57 @@ public class PostController {
 	}
 
 	@PostMapping(value = "/analysepost")
-	public ModelAndView analyze(HttpServletRequest req,@RequestParam("takepicture") String image) throws IOException,Exception {
+	public ModelAndView analyze(HttpServletRequest req, @RequestParam("takepicture") String image)
+			throws IOException, Exception {
 		ModelAndView mv = new ModelAndView();
 		User u = null;
 		Post p = null;
-		try{
+		try {
 			u = (User) req.getSession().getAttribute("user");
-			
-		}
-		catch(Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
+
 		System.out.println("==============here============");
 		ModelAndView succ = new ModelAndView("viewpost");
-		if(image.isEmpty()) {
-			throw new Exception("image is null");
+		if (image.isEmpty()) {
+			System.err.println("Image is empty please retry!!");
+			return new ModelAndView("post");
 		}
-		
 		Decoder decode = java.util.Base64.getDecoder();
-		System.out.println("========>"+image);
+		System.out.println("========>" + image);
 		byte[] decodeByte = decode.decode(image.split(",")[1]);
-		System.out.println("=========>SEE THIS"+decodeByte);
-		//String name = u.getName().concat("_"+System.nanoTime());
-		
-		String name = ""+System.nanoTime();
+		System.out.println("=========>SEE THIS" + decodeByte);
+		// String name = u.getName().concat("_"+System.nanoTime());
+
+		String name = "" + System.nanoTime();
 		File dir = new File("data/image/");
-		if (!dir.exists()) dir.mkdirs(); 
-		File file = new File(dir+"/"+name+".png");
-		
-		try(FileOutputStream fos = new FileOutputStream(file)){
+		if (!dir.exists())
+			dir.mkdirs();
+		File file = new File(dir + "/" + name + ".png");
+
+		try (FileOutputStream fos = new FileOutputStream(file)) {
 			fos.write(decodeByte);
 			fos.close();
 		}
 		try {
-			
+
 			if (u != null) {
-				
-				String uid = u.getUserid(); 
+
+				String uid = u.getUserid();
 				String post = "1";
-				String timestamp = ""+ System.nanoTime();
-				String s3Origin = upload.uploadToS3(uid+"_"+post+"_"+timestamp+".png", new FileInputStream(file));
+				String timestamp = "" + System.nanoTime();
+				String s3Origin = upload.uploadToS3(uid + "_" + post + "_" + timestamp + ".png",
+						new FileInputStream(file));
 				p = new Post();
 				p.setUserId(u.getUserid());
 				p.setImageUrl(s3Origin);
 				req.getSession().setAttribute("post", p);
 				mv.addObject("user", u);
-				mv.addObject("post",p);
+				mv.addObject("post", p);
 				mv.setViewName("postaudio");
-				
+
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -118,58 +119,59 @@ public class PostController {
 			mv.setViewName("error");
 			return mv;
 		}
+
 		return mv;
-		
+
 	}
+
 	@PostMapping(value = "/analyseaudiopost")
-	public ModelAndView analyzeAudio(HttpServletRequest req,@RequestParam("record") String record) throws IOException,Exception {
+	public ModelAndView analyzeAudio(HttpServletRequest req, @RequestParam("record") String record)
+			throws IOException, Exception {
 		ModelAndView mv = new ModelAndView();
 		User u = null;
 		Post p = null;
-		try{
+		try {
 			u = (User) req.getSession().getAttribute("user");
 			p = (Post) req.getSession().getAttribute("post");
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
+
 		System.out.println("==============here============");
 		ModelAndView succ = new ModelAndView("viewpost");
-		if(record.isEmpty()) {
-			throw new Exception("record is null");
+		if (record.isEmpty()) {
 		}
-		
+
 		Decoder decode = java.util.Base64.getDecoder();
-		System.out.println("========>"+record);
+		System.out.println("========>" + record);
 		byte[] decodeByte = decode.decode(record.split(",")[1]);
-		System.out.println("=========>SEE THIS"+decodeByte);
-		//String name = u.getName().concat("_"+System.nanoTime());
-		
-		String name = ""+System.nanoTime();
+		System.out.println("=========>SEE THIS" + decodeByte);
+		// String name = u.getName().concat("_"+System.nanoTime());
+
+		String name = "" + System.nanoTime();
 		File dir = new File("data/audio/");
-		if (!dir.exists()) dir.mkdirs();
-		File file = new File(dir+"/"+name+".webm");
-		
-		try(FileOutputStream fos = new FileOutputStream(file)){
+		if (!dir.exists())
+			dir.mkdirs();
+		File file = new File(dir + "/" + name + ".webm");
+
+		try (FileOutputStream fos = new FileOutputStream(file)) {
 			fos.write(decodeByte);
 			fos.close();
 		}
 		try {
-			if (u == null) throw new NullPointerException("User session not defined");
-			String uid = u.getUserid();
-			
-			String timestamp = ""+ System.nanoTime();
-			String s3Origin = upload.uploadToS3(uid+"_"+timestamp+".webm", new FileInputStream(file));
-			
-			
-			p.setAudioUrl(s3Origin);
-			//postRepository.save(p);
-			mv.addObject("user", u);
-			mv.addObject("post",p);
-			mv.setViewName("posttext");
-			return mv;
+			if (u != null) {
+
+				String uid = u.getUserid();
+
+				String timestamp = "" + System.nanoTime();
+				String s3Origin = upload.uploadToS3(uid + "_" + timestamp + ".webm", new FileInputStream(file));
+
+				p.setAudioUrl(s3Origin);
+				// postRepository.save(p);
+				mv.addObject("user", u);
+				mv.addObject("post", p);
+				mv.setViewName("posttext");
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -177,34 +179,34 @@ public class PostController {
 			mv.setViewName("error");
 			return mv;
 		}
-		
-		
+
+		return mv;
 	}
+
 	@PostMapping(value = "/analysetextpost")
-	public ModelAndView analyzeText(HttpServletRequest req,@RequestParam("text") String text) throws IOException,Exception {
+	public ModelAndView analyzeText(HttpServletRequest req, @RequestParam("text") String text)
+			throws IOException, Exception {
 		ModelAndView mv = new ModelAndView();
 		User u = null;
 		Post p = null;
-		try{
+		try {
 			u = (User) req.getSession().getAttribute("user");
 			p = (Post) req.getSession().getAttribute("post");
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
+
 		System.out.println("==============here============");
 		ModelAndView succ = new ModelAndView("viewpost");
-		/*if(text.isEmpty()) {
-			throw new Exception("text is null");
-		}*/
+		/*
+		 * if(text.isEmpty()) { throw new Exception("text is null"); }
+		 */
 		try {
-			
+
 			p.setText(text);
 			postRepository.save(p);
 			List<Friends> receiverIds = friendRepository.findByUserId(u.getUserid());
-			for(Friends f : receiverIds) {
+			for (Friends f : receiverIds) {
 				Notification n = new Notification();
 				n.setPostId(p.getPostId());
 				n.setReciverId(f.getFriendId());
@@ -214,9 +216,9 @@ public class PostController {
 				n.setType("post");
 				notificationRepository.save(n);
 			}
-			
+
 			mv.addObject("user", u);
-			mv.addObject("post",p);
+			mv.addObject("post", p);
 			mv.setViewName("success");
 			return mv;
 		} catch (Exception e) {
@@ -226,7 +228,6 @@ public class PostController {
 			mv.setViewName("error");
 			return mv;
 		}
-		
-		
+
 	}
 }

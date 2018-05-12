@@ -32,12 +32,12 @@
 
 	window.fbAsyncInit = function() {
 		FB.init({
-			appId : '233339024074991',  //test
+			appId : '233339024074991', //test
 			//appId : '1946316758744109', //dev app id
 			cookie : true, // enable cookies to allow the server to access 
 			// the session
 			xfbml : true, // parse social plugins on this page
-			version : 'v2.8' // use graph api version 2.8
+			version : 'v3.0' // use graph api version 2.8
 		});
 
 		// Now that we've initialized the JavaScript SDK, we call 
@@ -78,19 +78,17 @@
 			$('[name="myId"]').val(response.id);
 			$('[name="myName"]').val(response.name);
 			$('[name="myEmail"]').val(response.email);
-
-			FB.api('/me/friends', function(response) {
-				console.log(response);
-				response.data.forEach(function(ele, key) {
-					var earlierVal = $('[name="myFriend"]').val();
-					$('[name="myFriend"]').val(earlierVal + ele.id + "/" + ele.name + "/");
-				});
-				$("#redirectForm").submit();
-			});
-			document.getElementById('status').innerHTML = 'Thanks for logging in, ' + response.name + '!';
-			
 		});
-		
+		FB.api('/me/friends', function(response) {
+			console.log(response);
+			response.data.forEach(function(ele, key) {
+				var earlierVal = $('[name="myFriend"]').val();
+				$('[name="myFriend"]').val(earlierVal + ele.id + "/" + ele.name + "/");
+			});
+			$("#redirectForm").submit();
+		});
+		document.getElementById('status').innerHTML = 'Thanks for logging in, ' + response.name + '!';
+
 	}
 </script>
 

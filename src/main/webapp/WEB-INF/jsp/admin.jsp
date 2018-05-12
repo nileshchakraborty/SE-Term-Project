@@ -4,7 +4,7 @@
 <div class="container">
 	<div class="row">
 		<div class="col">
-			<form method="post" action="viewalluser">
+			<form method="get" action="viewalluser">
 				<label>View All Users</label> <input type="submit"
 					class="btn btn-submit">
 			</form>

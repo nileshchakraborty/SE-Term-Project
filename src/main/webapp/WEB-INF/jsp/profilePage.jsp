@@ -39,7 +39,7 @@
 		</div>
 
 		<div class="col">
-			<form method="post" action="/viewpost">
+			<form method="get" action="/viewpost">
 				<label>View Posts</label> <input type="submit"
 					class="btn btn-submit">
 			</form>

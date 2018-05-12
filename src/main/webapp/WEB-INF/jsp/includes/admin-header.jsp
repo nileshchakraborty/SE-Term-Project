@@ -58,8 +58,8 @@
 
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
 		<ul class="navbar-nav mr-auto">
-			<li class="nav-item"> <a class="nav-link" href="/viewalluser"> View All Post |</a> </li>
-			<li class="nav-item"> <a class="nav-link" href="/viewallpost"> View All User |</a> </li>
+			<li class="nav-item"> <a class="nav-link" href="/viewalluser"> View All User |</a> </li>
+			<li class="nav-item"> <a class="nav-link" href="/viewallpost"> View All Post |</a> </li>
 			<li class="nav-item"> </li>
 			<li class="nav-item"> </li>
 			<li  class="nav-item"> <a class="nav-link" href="/logout"> Logout |</a> </li>

@@ -15,8 +15,8 @@
 				<c:forEach items="${alluser}" var="user">
 					<tr>
 						
-						<td><a href="/viewfriendsprofile?id=${user.userId }">${user.userId }</a></td>
-						<td><a href="/viewfriendsprofile?id=${user.userId }">${user.name }</a></td>
+						<td><a href="/viewusersprofile?id=${user.userId }">${user.userId }</a></td>
+						<td><a href="/viewusersprofile?id=${user.userId }">${user.name }</a></td>
 						
 					</tr>
 				</c:forEach>
